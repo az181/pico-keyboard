@@ -3,8 +3,8 @@ In this project I'm building up to making the firmware for a toki pona keyboard 
 
 ### Objectives
  - [x] blinking light
- - [ ] light on when key press
- - [ ] light toggal when key press
+ - [x] light on when key press
+ - [ ] light toggle when key press
  - [ ] output some text when key pressed 
- - [ ] implimnet shift
+ - [ ] implement shift
  - [ ] make the toki pona keyboard
