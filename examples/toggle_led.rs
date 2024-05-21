@@ -1,4 +1,4 @@
-// the led lights up when the button (on gpio0) is pressed.
+// the led lights up when the button (on gpio2) is pressed.
 #![no_std]
 #![no_main]
 
@@ -14,13 +14,6 @@ use panic_probe as _;
 // Provide an alias for our BSP so we can switch targets quickly.
 // Uncomment the BSP you included in Cargo.toml, the rest of the code does not need to change.
 use rp_pico as bsp;
-
-use bsp::hal;
-
-use usb_device::{class_prelude::*, prelude::*};
-
-use usbd_hid::descriptor::KeyboardReport;
-use usbd_hid::descriptor::KeyboardUsage;
 
 use bsp::hal::{
     clocks::{init_clocks_and_plls, Clock},
@@ -64,25 +57,14 @@ fn main() -> ! {
     let mut key = pins.gpio2.into_pull_up_input();
     let mut key_current_state: bool = false;
     let mut key_passd_state: bool = false;
-    KeyboardReport::default();
+    led_pin.set_low().unwrap();
     loop {
-        led_pin.set_low().unwrap();
-        if key.is_high().unwrap() {
-            led_pin.set_high().unwrap();
-            KeyboardUsage::KeyboardAa;
-            delay.delay_ms(500);
+        if key_current_state != key_passd_state && key_current_state {
+            led_pin.toggle().unwrap();
         }
-        // // if key.is_high().unwrap() {
-        // //     led_pin.set_high().unwrap();
-        // // } else {
-        // // led_pin.set_low().unwrap();
-        // // }
-        // if key_current_state != key_passd_state && key_current_state {
-        //     led_pin.toggle().unwrap();
-        // }
-        // key_passd_state = key.is_low().unwrap();
-        // delay.delay_us(400);
-        // key_current_state = key.is_low().unwrap();
+        key_passd_state = key.is_low().unwrap();
+        delay.delay_us(400);
+        key_current_state = key.is_low().unwrap();
     }
 }
 

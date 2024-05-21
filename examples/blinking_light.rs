@@ -1,26 +1,17 @@
-// the led lights up when the button (on gpio0) is pressed.
+// the built in led blinks every 100 ms
 #![no_std]
 #![no_main]
 
 use bsp::entry;
-use cortex_m::prelude::_embedded_hal_blocking_delay_DelayMs;
+// use cortex_m::prelude::_embedded_hal_blocking_delay_DelayMs;
 use defmt::*;
 use defmt_rtt as _;
-use embedded_hal::digital::InputPin;
 use embedded_hal::digital::OutputPin;
-use embedded_hal::digital::StatefulOutputPin;
 use panic_probe as _;
 
 // Provide an alias for our BSP so we can switch targets quickly.
 // Uncomment the BSP you included in Cargo.toml, the rest of the code does not need to change.
 use rp_pico as bsp;
-
-use bsp::hal;
-
-use usb_device::{class_prelude::*, prelude::*};
-
-use usbd_hid::descriptor::KeyboardReport;
-use usbd_hid::descriptor::KeyboardUsage;
 
 use bsp::hal::{
     clocks::{init_clocks_and_plls, Clock},
@@ -61,28 +52,12 @@ fn main() -> ! {
     );
 
     let mut led_pin = pins.led.into_push_pull_output();
-    let mut key = pins.gpio2.into_pull_up_input();
-    let mut key_current_state: bool = false;
-    let mut key_passd_state: bool = false;
-    KeyboardReport::default();
+    led_pin.set_low().unwrap();
     loop {
+        led_pin.set_high().unwrap();
+        delay.delay_ms(100);
         led_pin.set_low().unwrap();
-        if key.is_high().unwrap() {
-            led_pin.set_high().unwrap();
-            KeyboardUsage::KeyboardAa;
-            delay.delay_ms(500);
-        }
-        // // if key.is_high().unwrap() {
-        // //     led_pin.set_high().unwrap();
-        // // } else {
-        // // led_pin.set_low().unwrap();
-        // // }
-        // if key_current_state != key_passd_state && key_current_state {
-        //     led_pin.toggle().unwrap();
-        // }
-        // key_passd_state = key.is_low().unwrap();
-        // delay.delay_us(400);
-        // key_current_state = key.is_low().unwrap();
+        delay.delay_ms(100);
     }
 }
 
