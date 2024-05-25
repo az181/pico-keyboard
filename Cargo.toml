@@ -78,3 +78,11 @@ debug-assertions = false
 incremental = false
 lto = 'fat'
 opt-level = 3
+
+
+[workspace]
+members = [
+    "examples/blinking_light.rs",
+    "examples/light_on_key.rs",
+    "examples/toggle_led.rs",
+]
